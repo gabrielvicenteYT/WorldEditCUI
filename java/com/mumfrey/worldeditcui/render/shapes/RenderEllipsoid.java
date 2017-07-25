@@ -2,7 +2,7 @@ package com.mumfrey.worldeditcui.render.shapes;
 
 import static com.mumfrey.liteloader.gl.GL.*;
 
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.Tessellator;
 
 import com.mumfrey.worldeditcui.render.RenderColour;
@@ -55,7 +55,7 @@ public class RenderEllipsoid extends RenderRegion
 	protected void drawXZPlane(LineInfo colour)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buf = tessellator.getBuffer();
+		VertexBuffer buf = tessellator.getBuffer();
 
 		int yRad = (int)Math.floor(this.radii.getY());
 		for (int yBlock = -yRad; yBlock < yRad; yBlock++)
@@ -91,7 +91,7 @@ public class RenderEllipsoid extends RenderRegion
 	protected void drawYZPlane(LineInfo colour)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buf = tessellator.getBuffer();
+		VertexBuffer buf = tessellator.getBuffer();
 
 		int xRad = (int)Math.floor(this.radii.getX());
 		for (int xBlock = -xRad; xBlock < xRad; xBlock++)
@@ -127,7 +127,7 @@ public class RenderEllipsoid extends RenderRegion
 	protected void drawXYPlane(LineInfo colour)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buf = tessellator.getBuffer();
+		VertexBuffer buf = tessellator.getBuffer();
 
 		int zRad = (int)Math.floor(this.radii.getZ());
 		for (int zBlock = -zRad; zBlock < zRad; zBlock++)

@@ -2,7 +2,7 @@ package com.mumfrey.worldeditcui.render.shapes;
 
 import static com.mumfrey.liteloader.gl.GL.*;
 
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.Tessellator;
 
 import com.mumfrey.worldeditcui.render.RenderColour;
@@ -37,7 +37,7 @@ public class RenderCylinderBox extends RenderRegion
 	public void render(Vector3 cameraPos)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buf = tessellator.getBuffer();
+		VertexBuffer buf = tessellator.getBuffer();
 
 		double xPos = this.centreX - cameraPos.getX();
 		double zPos = this.centreZ - cameraPos.getZ();

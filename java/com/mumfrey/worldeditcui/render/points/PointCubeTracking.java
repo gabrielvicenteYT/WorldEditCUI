@@ -37,9 +37,9 @@ public class PointCubeTracking extends PointCube
 	@Override
 	public void updatePoint()
 	{
-		int x = MathHelper.floor(this.entity.posX);
-        int y = MathHelper.floor(this.entity.posY + this.entity.getEyeHeight());
-        int z = MathHelper.floor(this.entity.posZ);
+		int x = MathHelper.floor_double(this.entity.posX);
+        int y = MathHelper.floor_double(this.entity.posY + this.entity.getEyeHeight());
+        int z = MathHelper.floor_double(this.entity.posZ);
         
         if (this.lastX != x || this.lastY != y || this.lastZ != z)
         {
