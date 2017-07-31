@@ -5,8 +5,8 @@ import static com.mumfrey.liteloader.gl.GL.*;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.Tessellator;
 
-import com.mumfrey.worldeditcui.render.LineInfo;
-import com.mumfrey.worldeditcui.render.RenderColour;
+import com.mumfrey.worldeditcui.render.LineStyle;
+import com.mumfrey.worldeditcui.render.RenderStyle;
 import com.mumfrey.worldeditcui.util.BoundingBox;
 import com.mumfrey.worldeditcui.util.Observable;
 import com.mumfrey.worldeditcui.util.Vector3;
@@ -25,18 +25,18 @@ public class Render3DGrid extends RenderRegion
 	private Vector3 first, second;
 	private double spacing = 1.0;
 	
-	public Render3DGrid(RenderColour colour, BoundingBox region)
+	public Render3DGrid(RenderStyle style, BoundingBox region)
 	{
-		this(colour, region.getMin(), region.getMax());
+		this(style, region.getMin(), region.getMax());
 		if (region.isDynamic())
 		{
 			region.addObserver(this);
 		}
 	}
 	
-	public Render3DGrid(RenderColour colour, Vector3 first, Vector3 second)
+	public Render3DGrid(RenderStyle style, Vector3 first, Vector3 second)
 	{
-		super(colour);
+		super(style);
 		this.first = first;
 		this.second = second;
 	}
@@ -89,16 +89,18 @@ public class Render3DGrid extends RenderRegion
 					x1, y1, z2, x2, y1, z2, x2, y2, z2, x1, y2, z2  // south
 			};
 			
-			for (LineInfo tempColour : this.colour.getColours())
+			for (LineStyle line : this.style.getLines())
 			{
-				buf.begin(GL_QUADS, VF_POSITION);
-				tempColour.prepareRender();
-				tempColour.prepareColour(0.25F);
-				for (int i = 0; i < vertices.length; i += 3)
+				if (line.prepare(this.style.getRenderType()))
 				{
-					buf.pos(vertices[i], vertices[i + 1], vertices[i + 2]).endVertex();
+					buf.begin(GL_QUADS, VF_POSITION);
+					line.applyColour(0.25F);
+					for (int i = 0; i < vertices.length; i += 3)
+					{
+						buf.pos(vertices[i], vertices[i + 1], vertices[i + 2]).endVertex();
+					}
+					tessellator.draw();
 				}
-				tessellator.draw();
 			}
 			
 			glEnableCulling();
@@ -110,16 +112,18 @@ public class Render3DGrid extends RenderRegion
 		}
 		
 		double cullAt = 128.0F;
-		for (LineInfo tempColour : this.colour.getColours())
+		for (LineStyle line : this.style.getLines())
 		{
-			tempColour.prepareRender();
+			if (!line.prepare(this.style.getRenderType()))
+			{
+				continue;
+			}
 			
 			buf.begin(GL_LINES, VF_POSITION);
-			tempColour.prepareColour();
+			line.applyColour();
 			
-			for (double yoff = 0; yoff + y1 <= y2; yoff += this.spacing)
+			for (double y = Math.max(y1, -cullAt); y <= y2 && y <= cullAt; y += this.spacing)
 			{
-				double y = y1 + yoff;
 				buf.pos(x1, y, z2).endVertex();
 				buf.pos(x2, y, z2).endVertex();
 				buf.pos(x1, y, z1).endVertex();
@@ -130,12 +134,8 @@ public class Render3DGrid extends RenderRegion
 				buf.pos(x2, y, z2).endVertex();
 			}
 			
-			for (double xoff = 0; xoff + x1 <= x2; xoff += this.spacing)
+			for (double x = Math.max(x1, -cullAt); x <= x2 && x <= cullAt; x += this.spacing)
 			{
-				double x = x1 + xoff;
-//				boolean major = xoff % 10 == 0;
-				if (x < -cullAt) continue;
-				if (x > cullAt) break;
 				buf.pos(x, y1, z1).endVertex();
 				buf.pos(x, y2, z1).endVertex();
 				buf.pos(x, y1, z2).endVertex();
@@ -146,12 +146,8 @@ public class Render3DGrid extends RenderRegion
 				buf.pos(x, y1, z2).endVertex();
 			}
 			
-			for (double zoff = 0; zoff + z1 <= z2; zoff += this.spacing)
+			for (double z = Math.max(z1, -cullAt); z <= z2 && z <= cullAt; z += this.spacing)
 			{
-				double z = z1 + zoff;
-//				boolean major = zoff % 10 == 0;
-				if (z < -cullAt) continue;
-				if (z > cullAt) break;
 				buf.pos(x1, y1, z).endVertex();
 				buf.pos(x2, y1, z).endVertex();
 				buf.pos(x1, y2, z).endVertex();
