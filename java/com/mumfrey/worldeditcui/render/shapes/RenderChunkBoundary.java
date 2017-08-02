@@ -3,7 +3,7 @@ package com.mumfrey.worldeditcui.render.shapes;
 import static com.mumfrey.liteloader.gl.GL.*;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.chunk.Chunk;
@@ -62,7 +62,7 @@ public class RenderChunkBoundary extends RenderRegion
 	private void renderChunkBorder(double yMin, double yMax, double xBase, double zBase)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buf = tessellator.getBuffer();
+		VertexBuffer buf = tessellator.getBuffer();
 
 		int spacing = 16;
 		
@@ -102,7 +102,7 @@ public class RenderChunkBoundary extends RenderRegion
 	private void renderChunkBoundary(int xChunk, int zChunk, double xBase, double zBase)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buf = tessellator.getBuffer();
+		VertexBuffer buf = tessellator.getBuffer();
 
 		Chunk chunk = this.mc.world.getChunkFromChunkCoords(xChunk, zChunk);
 
