@@ -3,7 +3,7 @@ package com.mumfrey.worldeditcui.render.shapes;
 import static com.mumfrey.liteloader.gl.GL.*;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.chunk.Chunk;
@@ -30,11 +30,11 @@ public class RenderChunkBoundary extends RenderRegion
 	@Override
 	public void render(Vector3 cameraPos)
 	{
-		double yMax = this.mc.world != null ? this.mc.world.getHeight() : 256.0;
+		double yMax = this.mc.theWorld != null ? this.mc.theWorld.getHeight() : 256.0;
 		double yMin = 0.0;
 		
-		long xBlock = MathHelper.floor(cameraPos.getX());
-		long zBlock = MathHelper.floor(cameraPos.getZ());
+		long xBlock = MathHelper.floor_double(cameraPos.getX());
+		long zBlock = MathHelper.floor_double(cameraPos.getZ());
 		
 		int xChunk = (int)(xBlock >> 4);
 		int zChunk = (int)(zBlock >> 4);
@@ -51,7 +51,7 @@ public class RenderChunkBoundary extends RenderRegion
 
 		this.renderChunkBorder(yMin, yMax, xBase, zBase);
 		
-		if (this.mc.world != null)
+		if (this.mc.theWorld != null)
 		{
 			this.renderChunkBoundary(xChunk, zChunk, xBase, zBase);
 		}
@@ -62,7 +62,7 @@ public class RenderChunkBoundary extends RenderRegion
 	private void renderChunkBorder(double yMin, double yMax, double xBase, double zBase)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buf = tessellator.getBuffer();
+		VertexBuffer buf = tessellator.getBuffer();
 
 		int spacing = 16;
 		
@@ -102,9 +102,9 @@ public class RenderChunkBoundary extends RenderRegion
 	private void renderChunkBoundary(int xChunk, int zChunk, double xBase, double zBase)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buf = tessellator.getBuffer();
+		VertexBuffer buf = tessellator.getBuffer();
 
-		Chunk chunk = this.mc.world.getChunkFromChunkCoords(xChunk, zChunk);
+		Chunk chunk = this.mc.theWorld.getChunkFromChunkCoords(xChunk, zChunk);
 
 		for (LineStyle line : this.style.getLines())
 		{

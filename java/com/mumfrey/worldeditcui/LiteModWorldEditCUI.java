@@ -187,9 +187,9 @@ public class LiteModWorldEditCUI implements Tickable, InitCompleteListener, Plug
 			
 			if (this.keyBindClearSel.isPressed())
 			{
-				if (mc.player != null)
+				if (mc.thePlayer != null)
 				{
-					mc.player.sendChatMessage("//sel");
+					mc.thePlayer.sendChatMessage("//sel");
 				}
 			}
 			
@@ -204,18 +204,18 @@ public class LiteModWorldEditCUI implements Tickable, InitCompleteListener, Plug
 			CUIConfiguration config = this.controller.getConfiguration();
 			this.alwaysOnTop = config.isAlwaysOnTop();
 				
-			if (mc.world != this.lastWorld || mc.player != this.lastPlayer)
+			if (mc.theWorld != this.lastWorld || mc.thePlayer != this.lastPlayer)
 			{
-				this.lastWorld = mc.world;
-				this.lastPlayer = mc.player;
+				this.lastWorld = mc.theWorld;
+				this.lastPlayer = mc.thePlayer;
 				
 				this.controller.getDebugger().debug("World change detected, sending new handshake");
 				this.controller.clear();
 				this.helo();
 				this.delayedHelo = LiteModWorldEditCUI.DELAYED_HELO_TICKS;
-				if (mc.player != null && config.isPromiscuous())
+				if (mc.thePlayer != null && config.isPromiscuous())
 				{
-					mc.player.sendChatMessage("/we cui"); //Tricks WE to send the current selection
+					mc.thePlayer.sendChatMessage("/we cui"); //Tricks WE to send the current selection
 				}
 			}
 			
@@ -225,9 +225,9 @@ public class LiteModWorldEditCUI implements Tickable, InitCompleteListener, Plug
 				if (this.delayedHelo == 0)
 				{
 					this.helo();
-					if (LiteLoader.getClientPluginChannels().isRemoteChannelRegistered(CHANNEL_WECUI) && mc.player != null)
+					if (LiteLoader.getClientPluginChannels().isRemoteChannelRegistered(CHANNEL_WECUI) && mc.thePlayer != null)
 					{
-						mc.player.sendChatMessage("/we cui");
+						mc.thePlayer.sendChatMessage("/we cui");
 					}
 				}
 			}
@@ -243,7 +243,7 @@ public class LiteModWorldEditCUI implements Tickable, InitCompleteListener, Plug
 	@Override
 	public String getVersion()
 	{
-		return "1.12_01";
+		return "1.10.2_01";
 	}
 	
 	@Override
