@@ -1,17 +1,17 @@
 package com.mumfrey.worldeditcui.config;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
+import com.mumfrey.worldeditcui.InitialisationFactory;
+import com.mumfrey.worldeditcui.render.ConfiguredColour;
+import net.fabricmc.loader.api.FabricLoader;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.Expose;
-import com.mumfrey.liteloader.core.LiteLoader;
-import com.mumfrey.worldeditcui.InitialisationFactory;
-import com.mumfrey.worldeditcui.render.ConfiguredColour;
 
 /**
  * Stores and reads WorldEditCUI settings
@@ -117,7 +117,7 @@ public final class CUIConfiguration implements InitialisationFactory
 	
 	public static CUIConfiguration create()
 	{
-		File jsonFile = new File(LiteLoader.getCommonConfigFolder(), CUIConfiguration.CONFIG_FILE_NAME);
+		File jsonFile = new File(FabricLoader.getInstance().getConfigDirectory(), CUIConfiguration.CONFIG_FILE_NAME);
 		
 		if (jsonFile.exists())
 		{
@@ -148,7 +148,7 @@ public final class CUIConfiguration implements InitialisationFactory
 	
 	public void save()
 	{
-		File jsonFile = new File(LiteLoader.getCommonConfigFolder(), CUIConfiguration.CONFIG_FILE_NAME);
+		File jsonFile = new File(FabricLoader.getInstance().getConfigDirectory(), CUIConfiguration.CONFIG_FILE_NAME);
 		
 		FileWriter fileWriter = null;
 		

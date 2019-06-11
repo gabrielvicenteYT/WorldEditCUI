@@ -64,22 +64,6 @@ public class LiteModWorldEditCUI implements Tickable, InitCompleteListener, Plug
 	private CUIListenerWorldRender worldRenderListener;
 	private CUIListenerChannel channelListener;
 	
-	private int delayedHelo = 0;
-	
-	@Override
-	public void init(File configPath)
-	{
-		Input input = LiteLoader.getInput();
-		input.registerKeyBinding(this.keyBindToggleUI);
-		input.registerKeyBinding(this.keyBindClearSel);
-		input.registerKeyBinding(this.keyBindChunkBorder);
-	}
-	
-	@Override
-	public void upgradeSettings(String version, File configPath, File oldConfigPath)
-	{
-	}
-	
 	/* (non-Javadoc)
 	 * @see com.mumfrey.liteloader.InitCompleteListener#onInitCompleted(net.minecraft.client.Minecraft, com.mumfrey.liteloader.core.LiteLoader)
 	 */
@@ -99,23 +83,6 @@ public class LiteModWorldEditCUI implements Tickable, InitCompleteListener, Plug
 		this.visible = true;
 		this.controller.getDebugger().debug("Joined game, sending initial handshake");
 		this.helo();
-	}
-	
-	/**
-	 * 
-	 */
-	private void helo()
-	{
-		PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
-		String message = "v|" + WorldEditCUI.PROTOCOL_VERSION;
-		buffer.writeBytes(message.getBytes(Charsets.UTF_8));
-		ClientPluginChannels.sendMessage(CHANNEL_WECUI, buffer, ChannelPolicy.DISPATCH_ALWAYS);
-	}
-	
-	@Override
-	public List<String> getMessageChannels()
-	{
-		return ImmutableList.<String>of("wecui:wecui");
 	}
 	
 	@Override
@@ -165,97 +132,6 @@ public class LiteModWorldEditCUI implements Tickable, InitCompleteListener, Plug
 			}
 		}
 		catch (Exception ex) {}
-	}
-	
-	@Override
-	public void onTick(Minecraft mc, float partialTicks, boolean inGame, boolean clock)
-	{
-		CUIConfiguration config = this.controller.getConfiguration();
-		
-		if (inGame && mc.currentScreen == null)
-		{
-			
-			if (this.keyBindToggleUI.isPressed())
-			{
-				if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
-				{
-					config.setAlwaysOnTop(!config.isAlwaysOnTop());
-				}
-				else
-				{
-					this.visible = !this.visible;
-				}
-			}
-			
-			if (this.keyBindClearSel.isPressed())
-			{
-				if (mc.player != null)
-				{
-					mc.player.sendChatMessage("//sel");
-				}
-				
-				if (config.isClearAllOnKey())
-				{
-					this.controller.clearRegions();
-				}
-			}
-			
-			if (this.keyBindChunkBorder.isPressed())
-			{
-				this.controller.toggleChunkBorders();
-			}
-		}
-		
-		if (inGame && clock && this.controller != null)
-		{
-			this.alwaysOnTop = config.isAlwaysOnTop();
-				
-			if (mc.world != this.lastWorld || mc.player != this.lastPlayer)
-			{
-				this.lastWorld = mc.world;
-				this.lastPlayer = mc.player;
-				
-				this.controller.getDebugger().debug("World change detected, sending new handshake");
-				this.controller.clear();
-				this.helo();
-				this.delayedHelo = LiteModWorldEditCUI.DELAYED_HELO_TICKS;
-				if (mc.player != null && config.isPromiscuous())
-				{
-					mc.player.sendChatMessage("/we cui"); //Tricks WE to send the current selection
-				}
-			}
-			
-			if (this.delayedHelo > 0)
-			{
-				this.delayedHelo--;
-				if (this.delayedHelo == 0)
-				{
-					this.helo();
-					if (LiteLoader.getClientPluginChannels().isRemoteChannelRegistered(CHANNEL_WECUI) && mc.player != null)
-					{
-						mc.player.sendChatMessage("/we cui");
-					}
-				}
-			}
-		}
-	}
-	
-	@Override
-	public String getName()
-	{
-		return "WorldEditCUI";
-	}
-	
-	@Override
-	public String getVersion()
-	{
-		return "1.12.1_01";
-	}
-	
-	@Override
-	public Class<? extends ConfigPanel> getConfigPanelClass()
-	{
-		return CUIConfigPanel.class;
 	}
 	
 	@Override

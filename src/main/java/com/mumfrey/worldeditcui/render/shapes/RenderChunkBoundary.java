@@ -1,23 +1,27 @@
 package com.mumfrey.worldeditcui.render.shapes;
 
-import static com.mumfrey.liteloader.gl.GL.*;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.chunk.Chunk;
-
 import com.mumfrey.worldeditcui.render.LineStyle;
 import com.mumfrey.worldeditcui.render.RenderStyle;
 import com.mumfrey.worldeditcui.util.Vector3;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.chunk.Chunk;
+
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glTranslated;
+
+//import static com.mumfrey.liteloader.gl.GL.*;
 
 public class RenderChunkBoundary extends RenderRegion
 {
-	private final Minecraft mc;
+	private final MinecraftClient mc;
 	private Render3DGrid grid;
 	
-	public RenderChunkBoundary(RenderStyle boundaryStyle, RenderStyle gridStyle, Minecraft minecraft)
+	public RenderChunkBoundary(RenderStyle boundaryStyle, RenderStyle gridStyle, MinecraftClient minecraft)
 	{
 		super(boundaryStyle);
 
@@ -62,7 +66,7 @@ public class RenderChunkBoundary extends RenderRegion
 	private void renderChunkBorder(double yMin, double yMax, double xBase, double zBase)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buf = tessellator.getBuffer();
+		BufferBuilder buf = tessellator.getBufferBuilder();
 
 		int spacing = 16;
 		
@@ -104,7 +108,7 @@ public class RenderChunkBoundary extends RenderRegion
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buf = tessellator.getBuffer();
 
-		Chunk chunk = this.mc.world.getChunkFromChunkCoords(xChunk, zChunk);
+		Chunk chunk = this.mc.world.getChunk(xChunk, zChunk);
 
 		for (LineStyle line : this.style.getLines())
 		{

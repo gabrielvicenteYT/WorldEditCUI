@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "worldeditcui",
+  "version": "${version}",
+  "name": "WorldEditCUI",
+  "description": "Client-side user interface for WorldEdit",
+  "authors": [
+    "yetanotherx",
+    "Mumfrey",
+    "TomyLobo",
+    "mikroskeem"
+  ],
+  "contact": {
+    "homepage": "https://github.com/mikroskeem/WorldEditCUI",
+    "sources": "https://github.com/mikroskeem/WorldEditCUI"
+  },
+  "license": "EPL-1.0",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "eu.mikroskeem.worldeditcui.FabricModWorldEditCUI"
+    ],
+    "modmenu": [
+      "eu.mikroskeem.worldeditcui.gui.FabricCUIConfigPanel"
+    ]
+  },
+  "mixins": [
+    "wecui.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.4.0"
+  },
+  "custom": {
+    "modmenu:clientsideOnly": true
+  }
+}

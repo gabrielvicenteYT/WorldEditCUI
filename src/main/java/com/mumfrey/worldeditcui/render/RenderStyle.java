@@ -1,8 +1,10 @@
 package com.mumfrey.worldeditcui.render;
 
-import static com.mumfrey.liteloader.gl.GL.*;
-
 import com.mumfrey.worldeditcui.config.Colour;
+
+import static org.lwjgl.opengl.GL11.GL_ALWAYS;
+import static org.lwjgl.opengl.GL11.GL_GEQUAL;
+import static org.lwjgl.opengl.GL11C.GL_LESS;
 
 /**
  * Render style adapter, can be one of the built-in {@link ConfiguredColour}s

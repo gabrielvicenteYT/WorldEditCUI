@@ -1,10 +1,9 @@
 package com.mumfrey.worldeditcui.gui.controls;
 
-import static com.mumfrey.liteloader.gl.GL.*;
-
 import com.mumfrey.worldeditcui.render.ConfiguredColour;
+import net.minecraft.client.MinecraftClient;
 
-import net.minecraft.client.Minecraft;
+import static com.mumfrey.liteloader.gl.GL.*;
 
 /**
  * Colour picker button control, spawns a style picker when clicked
@@ -24,7 +23,7 @@ public class GuiColourButton extends GuiControl
 	
 	private boolean pickerClicked = false;
 	
-	public GuiColourButton(Minecraft minecraft, int id, int xPosition, int yPosition, int controlWidth, int controlHeight, ConfiguredColour lineColour)
+	public GuiColourButton(MinecraftClient minecraft, int id, int xPosition, int yPosition, int controlWidth, int controlHeight, ConfiguredColour lineColour)
 	{
 		super(minecraft, id, xPosition, yPosition, controlWidth, controlHeight, lineColour.getDisplayName());
 		this.lineColour = lineColour;
@@ -51,9 +50,9 @@ public class GuiColourButton extends GuiControl
 	{
 		this.lineColour.setColourIntRGBA(this.colour);
 	}
-	
+
 	@Override
-	public void drawControl(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
+	public void drawControl(MinecraftClient minecraft, int mouseX, int mouseY, float partialTicks)
 	{
 		if (this.visible)
 		{
@@ -79,7 +78,7 @@ public class GuiColourButton extends GuiControl
 		}
 	}
 	
-	public void drawPicker(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
+	public void drawPicker(MinecraftClient minecraft, int mouseX, int mouseY, float partialTicks)
 	{
 		if (this.visible && this.picker != null)
 		{
@@ -111,7 +110,7 @@ public class GuiColourButton extends GuiControl
 	 * @see net.minecraft.src.GuiButton#mouseReleased(int, int)
 	 */
 	@Override
-	public void mouseReleased(int mouseX, int mouseY)
+	public boolean mouseReleased(int mouseX, int mouseY)
 	{
 		if (this.pickerClicked && this.picker != null)
 		{
@@ -124,7 +123,7 @@ public class GuiColourButton extends GuiControl
 	 * @see net.minecraft.src.GuiButton#mousePressed(net.minecraft.src.Minecraft, int, int)
 	 */
 	@Override
-	public boolean mousePressed(Minecraft minecraft, int mouseX, int mouseY)
+	public boolean mousePressed(MinecraftClient minecraft, int mouseX, int mouseY)
 	{
 		boolean pressed = super.mousePressed(minecraft, mouseX, mouseY);
 		

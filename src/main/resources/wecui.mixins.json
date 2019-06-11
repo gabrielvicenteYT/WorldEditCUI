@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "eu.mikroskeem.worldeditcui.mixins",
+  "minVersion": "0.7.10",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [],
+  "client": [
+    "ExampleMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

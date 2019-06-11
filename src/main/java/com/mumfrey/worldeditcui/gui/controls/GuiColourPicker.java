@@ -1,17 +1,16 @@
 package com.mumfrey.worldeditcui.gui.controls;
 
-import static com.mumfrey.liteloader.gl.GL.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.Color;
 import java.awt.Rectangle;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.input.Keyboard;
+import static com.mumfrey.liteloader.gl.GL.*;
 
 /**
  * Colour picker flyout control, for use with the designable GUI properties window
@@ -72,7 +71,7 @@ public class GuiColourPicker extends GuiControl
 	
 	private FontRenderer fontRenderer;
 	
-	public GuiColourPicker(Minecraft minecraft, int controlId, int xPos, int yPos, int initialColour, String displayText)
+	public GuiColourPicker(MinecraftClient minecraft, int controlId, int xPos, int yPos, int initialColour, String displayText)
 	{
 		super(minecraft, controlId, xPos, yPos, 231, 173, displayText);
 		
@@ -116,7 +115,7 @@ public class GuiColourPicker extends GuiControl
 	}
 	
 	@Override
-	protected void drawControl(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
+	protected void drawControl(MinecraftClient minecraft, int mouseX, int mouseY, float partialTicks)
 	{
 		this.mouseDragged(minecraft, mouseX, mouseY);
 		
@@ -218,7 +217,7 @@ public class GuiColourPicker extends GuiControl
 	 * @see net.minecraft.src.GuiButton#mouseDragged(net.minecraft.src.Minecraft, int, int)
 	 */
 	@Override
-	protected void mouseDragged(Minecraft minecraft, int mouseX, int mouseY)
+	protected void mouseDragged(MinecraftClient minecraft, int mouseX, int mouseY)
 	{
 		super.mouseDragged(minecraft, mouseX, mouseY);
 		

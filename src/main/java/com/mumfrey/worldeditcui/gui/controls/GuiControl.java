@@ -1,10 +1,11 @@
 package com.mumfrey.worldeditcui.gui.controls;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+
 import static com.mumfrey.liteloader.gl.GL.*;
 
 /**
@@ -13,7 +14,7 @@ import static com.mumfrey.liteloader.gl.GL.*;
  * 
  * @author Adam Mummery-Smith
  */
-public class GuiControl extends GuiButton
+public class GuiControl extends ButtonWidget
 {
 	/**
 	 * Used by some controls to indicate the manner in which they have handled a keypress
@@ -66,7 +67,7 @@ public class GuiControl extends GuiButton
 	/**
 	 * Reference to the minecraft game instance
 	 */
-	protected Minecraft mc;
+	protected MinecraftClient mc;
 	
 	/**
 	 * Flag indicating whether an action was performed, to support GuiScreenEx's callback mechanism
@@ -96,7 +97,7 @@ public class GuiControl extends GuiButton
 	 * @param mouseY Mouse Y coordinate
 	 */
 	@Override
-	public final void drawButton(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
+	public final void drawButton(MinecraftClient minecraft, int mouseX, int mouseY, float partialTicks)
 	{
 		this.drawControl(minecraft, mouseX, mouseY, partialTicks);
 	}
@@ -108,7 +109,7 @@ public class GuiControl extends GuiButton
 	 * @param mouseX Mouse X coordinate
 	 * @param mouseY Mouse Y coordinate
 	 */
-	protected void drawControl(Minecraft minecraft, int mouseX, int mouseY, float partialTicks)
+	protected void drawControl(MinecraftClient minecraft, int mouseX, int mouseY, float partialTicks)
 	{
 		super.drawButton(minecraft, mouseX, mouseY, partialTicks);
 	}
@@ -124,13 +125,13 @@ public class GuiControl extends GuiButton
 	 * @param controlHeight Control height
 	 * @param displayText Control display text
 	 */
-	public GuiControl(Minecraft minecraft, int controlId, int xPos, int yPos, int controlWidth, int controlHeight, String displayText)
+	public GuiControl(MinecraftClient minecraft, int controlId, int xPos, int yPos, int controlWidth, int controlHeight, String displayText)
 	{
 		super(controlId, xPos, yPos, controlWidth, controlHeight, displayText);
 		this.mc = minecraft;
 	}
 	
-	public GuiControl(Minecraft minecraft, int controlId, int xPos, int yPos, String displayText)
+	public GuiControl(MinecraftClient minecraft, int controlId, int xPos, int yPos, String displayText)
 	{
 		super(controlId, xPos, yPos, displayText);
 		this.mc = minecraft;

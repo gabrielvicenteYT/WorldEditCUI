@@ -51,9 +51,9 @@ public class Vector3 implements Comparable<Vector3>
 	public Vector3(Entity entity, double partialTicks)
 	{
 		this(
-			entity.prevPosX + ((entity.posX - entity.prevPosX) * partialTicks),
-			entity.prevPosY + ((entity.posY - entity.prevPosY) * partialTicks),
-			entity.prevPosZ + ((entity.posZ - entity.prevPosZ) * partialTicks)
+			entity.prevX + ((entity.x - entity.prevX) * partialTicks),
+			entity.prevY + ((entity.y - entity.prevY) * partialTicks),
+			entity.prevZ + ((entity.z - entity.prevZ) * partialTicks)
 		);
 	}
 	
