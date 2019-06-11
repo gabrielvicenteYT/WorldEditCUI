@@ -46,37 +46,6 @@ import com.mumfrey.worldeditcui.gui.CUIConfigPanel;
  */
 public class LiteModWorldEditCUI implements Tickable, InitCompleteListener, PluginChannelListener, PostRenderListener, Configurable, JoinGameListener, Messenger
 {
-	private static final int DELAYED_HELO_TICKS = 10;
-
-	private static final String CHANNEL_WECUI = "WECUI";
-	
-	private WorldEditCUI controller;
-	private WorldClient lastWorld;
-	private EntityPlayerSP lastPlayer;
-	
-	private KeyBinding keyBindToggleUI = new KeyBinding("wecui.keys.toggle", Keyboard.KEY_NONE, "wecui.keys.category");
-	private KeyBinding keyBindClearSel = new KeyBinding("wecui.keys.clear", Keyboard.KEY_NONE, "wecui.keys.category");
-	private KeyBinding keyBindChunkBorder = new KeyBinding("wecui.keys.chunk", Keyboard.KEY_NONE, "wecui.keys.category");
-	
-	private boolean visible = true;
-	private boolean alwaysOnTop = false;
-	
-	private CUIListenerWorldRender worldRenderListener;
-	private CUIListenerChannel channelListener;
-	
-	/* (non-Javadoc)
-	 * @see com.mumfrey.liteloader.InitCompleteListener#onInitCompleted(net.minecraft.client.Minecraft, com.mumfrey.liteloader.core.LiteLoader)
-	 */
-	@Override
-	public void onInitCompleted(Minecraft minecraft, LiteLoader loader)
-	{
-		this.controller = new WorldEditCUI();
-		this.controller.initialise(minecraft);
-		
-		this.worldRenderListener = new CUIListenerWorldRender(this.controller, minecraft);
-		this.channelListener = new CUIListenerChannel(this.controller);
-	}
-	
 	@Override
 	public void onJoinGame(INetHandler netHandler, SPacketJoinGame loginPacket, ServerData serverData, RealmsServer realmsServer)
 	{
@@ -109,32 +78,6 @@ public class LiteModWorldEditCUI implements Tickable, InitCompleteListener, Plug
 	}
 	
 	@Override
-	public List<String> getChannels()
-	{
-		return ImmutableList.<String>of(LiteModWorldEditCUI.CHANNEL_WECUI);
-	}
-	
-	@Override
-	public void onCustomPayload(String channel, PacketBuffer data)
-	{
-		try
-		{
-			int readableBytes = data.readableBytes();
-			if (readableBytes > 0)
-			{
-				byte[] payload = new byte[readableBytes];
-				data.readBytes(payload);
-				this.channelListener.onMessage(new String(payload, Charsets.UTF_8));
-			}
-			else
-			{
-				this.controller.getDebugger().debug("Warning, invalid (zero length) payload received from server");
-			}
-		}
-		catch (Exception ex) {}
-	}
-	
-	@Override
 	public void onPostRenderEntities(float partialTicks)
 	{
 		if (this.visible && !this.alwaysOnTop)
@@ -152,10 +95,5 @@ public class LiteModWorldEditCUI implements Tickable, InitCompleteListener, Plug
 		{
 			this.worldRenderListener.onRender(partialTicks);
 		}
-	}
-	
-	public WorldEditCUI getController()
-	{
-		return this.controller;
 	}
 }

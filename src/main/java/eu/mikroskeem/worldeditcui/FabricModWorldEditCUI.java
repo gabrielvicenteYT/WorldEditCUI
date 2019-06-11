@@ -13,6 +13,7 @@ import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.world.World;
@@ -28,9 +29,7 @@ import java.util.List;
  */
 public final class FabricModWorldEditCUI implements ModInitializer {
     private static final int DELAYED_HELO_TICKS = 10;
-    private static final String CHANNEL_WECUI = "WECUI";
-
-    private static final List<String> MESSAGE_CHANNELS = Collections.unmodifiableList(Arrays.asList("wecui:wecui"));
+    public static final Identifier CHANNEL_WECUI = new Identifier("worldedit", "cui");
 
     private final Identifier keybindToggleUIId = new Identifier("wecui", "keys.toggle");
     private final Identifier keybindClearSelId = new Identifier("wecui", "keys.clear");
@@ -39,9 +38,9 @@ public final class FabricModWorldEditCUI implements ModInitializer {
     private final FabricKeyBinding keyBindClearSel = FabricKeyBinding.Builder.create(keybindClearSelId, InputUtil.Type.SCANCODE, InputUtil.UNKNOWN_KEYCODE.getKeyCode(), "wecui.keys.category").build();
     private final FabricKeyBinding keyBindChunkBorder = FabricKeyBinding.Builder.create(keybindChunkBorderId, InputUtil.Type.SCANCODE, InputUtil.UNKNOWN_KEYCODE.getKeyCode(), "wecui.keys.category").build();
 
-    private WorldEditCUI controller;
-    private CUIListenerWorldRender worldRenderListener;
-    private CUIListenerChannel channelListener;
+    public static WorldEditCUI controller;
+    public static CUIListenerWorldRender worldRenderListener;
+    public static CUIListenerChannel channelListener;
 
     private World lastWorld;
     private ClientPlayerEntity lastPlayer;
@@ -52,15 +51,8 @@ public final class FabricModWorldEditCUI implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        MinecraftClient minecraft = MinecraftClient.getInstance();
-
-        this.controller = new WorldEditCUI();
-        this.controller.initialise(minecraft);
-        this.worldRenderListener = new CUIListenerWorldRender(this.controller, minecraft);
-        this.channelListener = new CUIListenerChannel(this.controller);
-
         ClientTickCallback.EVENT.register(mc -> {
-            CUIConfiguration config = this.controller.getConfiguration();
+            CUIConfiguration config = controller.getConfiguration();
             boolean inGame = true; // TODO!
             boolean clock = true; // TODO!
 
@@ -79,24 +71,24 @@ public final class FabricModWorldEditCUI implements ModInitializer {
                     }
 
                     if (config.isClearAllOnKey()) {
-                        this.controller.clearRegions();
+                        controller.clearRegions();
                     }
                 }
 
                 if (this.keyBindChunkBorder.isPressed()) {
-                    this.controller.toggleChunkBorders();
+                    controller.toggleChunkBorders();
                 }
             }
 
-            if (inGame && clock && this.controller != null) {
+            if (inGame && clock && controller != null) {
                 this.alwaysOnTop = config.isAlwaysOnTop();
 
                 if (mc.world != this.lastWorld || mc.player != this.lastPlayer) {
                     this.lastWorld = mc.world;
                     this.lastPlayer = mc.player;
 
-                    this.controller.getDebugger().debug("World change detected, sending new handshake");
-                    this.controller.clear();
+                    controller.getDebugger().debug("World change detected, sending new handshake");
+                    controller.clear();
                     this.helo();
                     this.delayedHelo = FabricModWorldEditCUI.DELAYED_HELO_TICKS;
                     if (mc.player != null && config.isPromiscuous()) {
@@ -121,11 +113,13 @@ public final class FabricModWorldEditCUI implements ModInitializer {
         PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
         String message = "v|" + WorldEditCUI.PROTOCOL_VERSION;
         buffer.writeBytes(message.getBytes(Charsets.UTF_8));
-        ClientPluginChannels.sendMessage(CHANNEL_WECUI, buffer, ChannelPolicy.DISPATCH_ALWAYS);
+
+        CustomPayloadC2SPacket packet = new CustomPayloadC2SPacket(CHANNEL_WECUI, buffer);
+        MinecraftClient.getInstance().getNetworkHandler().sendPacket(packet);
     }
 
     public WorldEditCUI getController()
     {
-        return this.controller;
+        return FabricModWorldEditCUI.controller;
     }
 }
